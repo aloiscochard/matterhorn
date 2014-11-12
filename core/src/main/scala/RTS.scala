@@ -60,16 +60,16 @@ object RTS {
       Wait(ThreadId(castF[Future](future), Interruptor.unintr)) :: Nil
   }
 
-  sealed trait Exp extends Any
+  sealed trait Exp
 
   object Exp {
     import Val._
 
-    case class Point(f: Unit => Val) extends AnyVal with Exp
-    case class Map(f: Val => Val) extends AnyVal with Exp
-    case class Bind(f: Val => List[Exp]) extends AnyVal with Exp
+    case class Point(f: Unit => Val) extends Exp
+    case class Map(f: Val => Val) extends Exp
+    case class Bind(f: Val => List[Exp]) extends Exp
     case class Apply(f: (Val, Val) => Val, left: List[Exp], right: List[Exp]) extends Exp
-    case class Fork(f: Unit => List[Exp]) extends AnyVal with Exp
-    case class Wait(t: ThreadId) extends AnyVal with Exp
+    case class Fork(f: Unit => List[Exp]) extends Exp
+    case class Wait(t: ThreadId) extends Exp
   }
 }
