@@ -8,7 +8,7 @@ case class IO[A] private[matterhorn](thunk: Thunk) extends AnyVal {
   def map[B](f: A => B): IO[B] = IO[B](Thunk.map(thunk)(f))
   def flatMap[B](f: A => IO[B]): IO[B] = IO[B](Thunk.bind(thunk)(f))
 
-  def par: ParIO[A] = ParIO(thunk)
+  def concurrently: Concurrently[A] = Concurrently(thunk)
   def void: IO[Unit] = map(_ => ())
 }
 

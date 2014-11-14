@@ -7,9 +7,10 @@ import RTS._
 
 import rts.Interruptor
 
-case class ParIO[A] private[matterhorn](thunk: Thunk) extends AnyVal {
-  def *>[B](par: ParIO[B]): ParIO[B] =
-    Concurrent.concurrently(IO[A](thunk), IO[B](par.thunk)).map(_._2).par
+case class Concurrently[A] private[matterhorn](thunk: Thunk) extends AnyVal {
+  def *>[B](par: Concurrently[B]): Concurrently[B] =
+    Concurrent.concurrently(IO[A](thunk), IO[B](par.thunk)).map(_._2).concurrently
+  def map[B](f: A => B): Concurrently[B] = Concurrently[B](Thunk.map(thunk)(f))
 
   def io: IO[A] = IO(thunk)
 }
