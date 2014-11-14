@@ -31,4 +31,7 @@ object IO {
   //def duringIO[A](p: IO[Boolean])(io: IO[A]): IO[Seq[A]] = p.flatMap(x => if (x) io.void else unit)
   def duringIO_[A](p: IO[Boolean])(io: IO[A]): IO[Unit] = p.flatMap(x => if (x) io *> duringIO_(p)(io) else unitIO)
   def whenIO[A](p: IO[Boolean])(io: IO[A]): IO[Unit] = p.flatMap(x => if (x) io.void else unitIO)
+
+  def catching[E <: Exception, A](io: IO[A])(f: E => IO[A])(implicit E: scala.reflect.ClassTag[E]): IO[A] =
+    IO[A](Thunk.catching(io)(f))
 }

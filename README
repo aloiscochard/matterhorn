@@ -1,14 +1,16 @@
 # WIP
 
-- `catch` for IO
+- `mask` for IO
+- Support scala.concurrent.blocking
 
 - remove mapConcurrently (write test using scalaz to excercise the sementic)
 - scalaz-stream integration/basic NIO
 - benchmarks
 - profiling
 - Stack with ArrayBuffer
-- investigate thunk datastructure optimisation
-- investigate loop optimisation
-- investigate function optimisation (caching)
+- Optimisation
+  - investigate loop optimisation
+  - investigate function optimisation (caching)
+  - avoid boxing in Either for frame stack?
 
 - Test case for hierarchical interruptors
