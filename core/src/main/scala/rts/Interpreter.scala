@@ -29,7 +29,7 @@ object Interpreter {
     var value: Val = value0
     var stack: List[Frame] = stack0
     var next: Option[Continuation] = None
-    var catchers: List[(Exception => Option[Thunk], State)] = Nil
+    var catchers: List[(Throwable => Option[Thunk], State)] = Nil
 
     var done: Boolean = false
 
@@ -90,7 +90,7 @@ object Interpreter {
             pushT
             thunk = on.reverse :+ Point { _ => catchers = catchers.tail; value }
         }
-      } catch { case e: Exception =>
+      } catch { case e: Throwable =>
         catchers.foldRight(None: Option[(Thunk, State)]) { case ((f, state), res) =>
           res.orElse(f(e).map(_ -> state))
         } match {
