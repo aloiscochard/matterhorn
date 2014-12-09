@@ -88,7 +88,7 @@ object Interpreter {
           case Catch(f, on) =>
             catchers = (f, (thunk.tail, stack)) :: catchers
             pushT
-            thunk = on :+ Point { _ => catchers = catchers.tail; value }
+            thunk = on.reverse :+ Point { _ => catchers = catchers.tail; value }
         }
       } catch { case e: Exception =>
         catchers.foldRight(None: Option[(Thunk, State)]) { case ((f, state), res) =>

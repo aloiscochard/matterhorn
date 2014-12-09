@@ -55,6 +55,14 @@ class CoreSpec extends FunSpec with TypeCheckedTripleEquals with ScalaFutures {
       assert(unsafePerformIO_(main) === 42)
     }
 
+    it("must support exception handling (chain)") {
+      case class Foo(x: Int) extends Exception
+
+      val main = catching(captureIO[Int](throw new Foo(42)).map(_ + 1))((e: Foo) => constIO(e.x))
+
+      assert(unsafePerformIO_(main) === 42)
+    }
+
     it("must support thread interruption") {
       def task: IO[Unit] = unitIO *> task
 
