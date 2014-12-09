@@ -10,7 +10,7 @@ object HelloBuild extends Build {
     lazy val root = Project(
       id = "root",
       base = file(".")
-    ).aggregate(core, stm, scalaz, bench)
+    ).aggregate(core, stm, machines, scalaz, bench)
 
     lazy val core = Project(
       id = "core",
@@ -28,6 +28,12 @@ object HelloBuild extends Build {
       libraryDependencies ++= Seq(
         "org.scala-stm" %% "scala-stm" % "0.7"
       )
+    ).dependsOn(core, core % "test->test")
+
+    lazy val machines = Project(
+      id = "machines",
+      base = file("machines")).settings(
+      name := "matterhorn-machines"
     ).dependsOn(core, core % "test->test")
 
     lazy val scalaz = Project(
