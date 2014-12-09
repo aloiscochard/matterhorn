@@ -10,6 +10,12 @@ package object matterhorn {
     override def map[A, B](fa: IO[A])(f: A => B): IO[B] = fa.map(f)
   }
 
+  implicit val CatchableMonad: Catchable[IO] = new Catchable[IO] {
+    def attempt[A](f: IO[A]): IO[Throwable \/ A] =
+      catching[Throwable, Throwable \/ A](f.map(\/-(_)))(e => constIO(-\/(e)))
+    def fail[A](err: Throwable): IO[A] = captureIO(throw err)
+  }
+
   implicit val ConcurrentlyApplicative: Applicative[Concurrently] = new Applicative[Concurrently] {
     def point[A](a: => A): Concurrently[A] = captureIO(a).concurrently
     def ap[A, B](fa: => Concurrently[A])(f: => Concurrently[A => B]): Concurrently[B] =
