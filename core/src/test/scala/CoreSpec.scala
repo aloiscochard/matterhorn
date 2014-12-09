@@ -28,13 +28,13 @@ class CoreSpec extends FunSpec with TypeCheckedTripleEquals with ScalaFutures {
     }
 
     it("must support exception handling") {
-      val main = catching(constIO(42))((e: Exception) => constIO(0))
+      val main = catching(constIO(42))((e: Throwable) => constIO(0))
 
       assert(unsafePerformIO_(main) === 42)
     }
 
     it("must support exception handling (throw)") {
-      case class Foo(x: Int) extends Exception
+      case class Foo(x: Int) extends Throwable
 
       val main = catching(captureIO(throw new Foo(42)) *> constIO(0))((e: Foo) => constIO(e.x))
 
@@ -43,8 +43,8 @@ class CoreSpec extends FunSpec with TypeCheckedTripleEquals with ScalaFutures {
 
     it("must support exception handling (nested)") {
 
-      case class Foo(x: Int) extends Exception
-      case class Bar(x: Int) extends Exception
+      case class Foo(x: Int) extends Throwable
+      case class Bar(x: Int) extends Throwable
 
       val main = catching(
         catching(

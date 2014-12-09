@@ -56,7 +56,7 @@ object RTS {
     def fork[A](io: IO[A]): Thunk =
       Fork(_ => io.thunk) :: Nil
 
-    def catching[A, E <: Exception](io: IO[A])(f: E => IO[A])(implicit E: scala.reflect.ClassTag[E]): Thunk =
+    def catching[A, E <: Throwable](io: IO[A])(f: E => IO[A])(implicit E: scala.reflect.ClassTag[E]): Thunk =
       Catch({
         case e: E => Some(f(e).thunk)
         case _ => None
@@ -79,6 +79,6 @@ object RTS {
     case class Fork(f: Unit => Thunk) extends Exp
     case class Wait(t: ThreadId) extends Exp
 
-    case class Catch(f: Exception => Option[Thunk], on: Thunk) extends Exp
+    case class Catch(f: Throwable => Option[Thunk], on: Thunk) extends Exp
   }
 }
